@@ -1,16 +1,27 @@
-use std::env;
 use std::fs;
-use std::path::Path;
+use std::path::PathBuf;
+use clap::Parser;
 use wtlrs::{bibtex, latex};
 
+#[derive(Parser, Debug)]
+#[clap(about, version, author)]
+struct Args {
+    #[clap(short, long)]
+    outfile: Option<PathBuf>,
+    bib: PathBuf,
+    aux: PathBuf,
+}
+
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    let bibfile = Path::new(&args[1]);
-    let auxfile = Path::new(&args[2]);
-    let aux = fs::read_to_string(auxfile).unwrap();
+    let args = Args::parse();
+    let aux = fs::read_to_string(args.aux).unwrap();
     let citekeys = latex::collect_citekeys(&aux);
     // eprintln!("{:?}", citekeys);
-    let mut content = fs::read_to_string(bibfile).unwrap();
+    let mut content = fs::read_to_string(args.bib).unwrap();
     content = bibtex::filter(&content, &citekeys);
-    print!("{}", content);
+    if let Some(outfile) = args.outfile {
+        fs::write(outfile, content).expect("error");
+    } else {
+        print!("{}", content);
+    }
 }

@@ -1,18 +1,29 @@
-use std::env;
 use std::fs;
-use std::path::Path;
+use std::path::PathBuf;
+use clap::Parser;
 use wtlrs::latex;
 
+#[derive(Parser, Debug)]
+#[clap(about, version, author)]
+struct Args {
+    #[clap(short, long)]
+    outfile: Option<PathBuf>,
+    tex: PathBuf,
+}
+
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    let texfile = Path::new(&args[1]);
-    let auxfile = texfile.with_extension("aux");
+    let args = Args::parse();
+    let auxfile = args.tex.with_extension("aux");
     let aux = fs::read_to_string(&auxfile).expect("error");
     let labelmap = latex::collect_labels(&aux);
     eprintln!("{:?}", labelmap);
-    let mut content = fs::read_to_string(texfile).expect("error");
+    let mut content = fs::read_to_string(args.tex).expect("error");
     content = latex::resolve_ref(&content, &labelmap);
     content = latex::remove_asterisk(&content);
     content = latex::label_caption(&content, &labelmap);
-    print!("{}", content);
+    if let Some(outfile) = args.outfile {
+        fs::write(outfile, content).expect("error");
+    } else {
+        print!("{}", content);
+    }
 }
