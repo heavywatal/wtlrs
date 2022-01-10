@@ -1,3 +1,6 @@
+pub mod bibtex;
+pub mod latex;
+
 #[cfg(test)]
 mod tests {
     #[test]
