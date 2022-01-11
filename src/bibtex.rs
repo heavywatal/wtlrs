@@ -1,6 +1,6 @@
-use std::collections::HashSet;
 use once_cell::sync::OnceCell;
 use regex::{Captures, Regex};
+use std::collections::HashSet;
 
 macro_rules! regex {
     ($re:literal $(,)?) => {{
@@ -9,9 +9,19 @@ macro_rules! regex {
     }};
 }
 
-pub fn filter(content: &str, citekeys: &HashSet::<String>) -> String {
-    let fields = HashSet::from(["author", "title", "journal", "year",
-        "volume", "number", "pages", "publisher", "address", "editor"]);
+pub fn filter(content: &str, citekeys: &HashSet<String>) -> String {
+    let fields = HashSet::from([
+        "author",
+        "title",
+        "journal",
+        "year",
+        "volume",
+        "number",
+        "pages",
+        "publisher",
+        "address",
+        "editor",
+    ]);
     let re = Regex::new(r"(?ms)@\w+?\{(\S+?),.+?\}\n").unwrap();
     let mut citekeys = citekeys.clone();
     let mut s = String::new();
@@ -19,13 +29,15 @@ pub fn filter(content: &str, citekeys: &HashSet::<String>) -> String {
         if citekeys.remove(&caps[1]) {
             s.push_str(&select(&caps[0], &fields));
             s.push('\n');
-            if citekeys.is_empty() {break;}
+            if citekeys.is_empty() {
+                break;
+            }
         }
     }
     return s;
 }
 
-fn select(entry: &str, fields: &HashSet::<&str>) -> String {
+fn select(entry: &str, fields: &HashSet<&str>) -> String {
     let mut s = String::new();
     let mut lines = entry.split_inclusive('\n');
     s.push_str(lines.next().unwrap()); // @article

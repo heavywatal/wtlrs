@@ -1,6 +1,6 @@
+use clap::Parser;
 use std::fs;
 use std::path::PathBuf;
-use clap::Parser;
 use wtlrs::latex;
 
 #[derive(Parser, Debug)]
