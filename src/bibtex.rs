@@ -1,3 +1,5 @@
+//! Parse `.bib` files.
+
 use once_cell::sync::OnceCell;
 use regex::{Captures, Regex};
 use std::collections::HashSet;
@@ -9,6 +11,7 @@ macro_rules! regex {
     }};
 }
 
+/// Filter bib entries with citekeys.
 pub fn filter(content: &str, citekeys: &HashSet<String>) -> String {
     let fields = HashSet::from([
         "author",

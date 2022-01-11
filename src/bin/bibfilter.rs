@@ -3,12 +3,16 @@ use std::fs;
 use std::path::PathBuf;
 use wtlrs::{bibtex, latex};
 
+/// Filter bibtex file with citekeys in aux file.
 #[derive(Parser, Debug)]
 #[clap(about, version, author)]
 struct Args {
+    /// If not specified, defaults to stdout
     #[clap(short, long)]
     outfile: Option<PathBuf>,
+    /// Path to bibtex file
     bib: PathBuf,
+    /// Path to aux file
     aux: PathBuf,
 }
 

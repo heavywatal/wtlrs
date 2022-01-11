@@ -1,3 +1,5 @@
+//! A personal crate for miscellaneous tasks.
+
 pub mod bibtex;
 pub mod latex;
 

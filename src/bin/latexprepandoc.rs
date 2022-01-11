@@ -3,11 +3,14 @@ use std::fs;
 use std::path::PathBuf;
 use wtlrs::latex;
 
+/// Preprocess LaTeX file to feed Pandoc.
 #[derive(Parser, Debug)]
 #[clap(about, version, author)]
 struct Args {
+    /// If not specified, defaults to stdout
     #[clap(short, long)]
     outfile: Option<PathBuf>,
+    /// Path to tex file
     tex: PathBuf,
 }
 
