@@ -3,7 +3,7 @@ use std::collections::{HashMap, HashSet};
 
 pub fn resolve_ref(content: &str, labelmap: &HashMap<String, String>) -> String {
     let re = Regex::new(r"\\ref\{(.+?)\}").unwrap();
-    let repl = |caps: &Captures| -> String { format!("{}", labelmap[&caps[1]]) };
+    let repl = |caps: &Captures| -> String { labelmap[&caps[1]].to_string() };
     return re.replace_all(content, repl).to_string();
 }
 
@@ -26,13 +26,13 @@ pub fn label_caption(content: &str, labelmap: &HashMap<String, String>) -> Strin
 
 fn classify_label(label: &str) -> &str {
     let ll = label.to_lowercase();
-    return if ll.starts_with("fig") {
+    if ll.starts_with("fig") {
         "Figure"
     } else if ll.starts_with("tab") {
         "Table"
     } else {
         "Equation???"
-    };
+    }
 }
 
 pub fn collect_citekeys(aux: &str) -> HashSet<String> {
@@ -43,7 +43,7 @@ pub fn collect_citekeys(aux: &str) -> HashSet<String> {
             set.insert(k.to_string());
         }
     }
-    return set;
+    set
 }
 
 pub fn collect_labels(aux: &str) -> HashMap<String, String> {
@@ -52,5 +52,5 @@ pub fn collect_labels(aux: &str) -> HashMap<String, String> {
     for caps in re.captures_iter(aux) {
         map.insert(caps[1].to_string(), caps[2].to_string());
     }
-    return map;
+    map
 }

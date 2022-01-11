@@ -34,7 +34,7 @@ pub fn filter(content: &str, citekeys: &HashSet<String>) -> String {
             }
         }
     }
-    return s;
+    s
 }
 
 fn select(entry: &str, fields: &HashSet<&str>) -> String {
@@ -52,7 +52,7 @@ fn select(entry: &str, fields: &HashSet<&str>) -> String {
         }
     }
     s.replace_range((s.len() - 2).., "}\n");
-    return s;
+    s
 }
 
 fn normalize_pages(line: &str) -> String {
