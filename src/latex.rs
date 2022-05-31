@@ -43,9 +43,9 @@ fn classify_label(label: &str) -> &str {
 /// Extract citation keys from `.aux` content.
 pub fn collect_citekeys(aux: &str) -> HashSet<String> {
     let mut set = HashSet::<String>::new();
-    let re = Regex::new(r"\\citation\{(.+?)\}").unwrap();
+    let re = Regex::new(r"\\(citation|abx@aux@cite\{0\})\{(.+?)\}").unwrap();
     for caps in re.captures_iter(aux) {
-        for k in caps[1].split(',') {
+        for k in caps[2].split(',') {
             set.insert(k.to_string());
         }
     }
