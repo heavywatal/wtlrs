@@ -68,7 +68,7 @@ fn normalize_pages(line: &str) -> String {
             new_end.replace_range((start.len() - end.len()).., &end);
             end = new_end;
         }
-        return format!("{}{{{}--{}}}", &caps[1], start, end);
+        format!("{}{{{}--{}}}", &caps[1], start, end)
     };
-    return re.replace(line, repl).to_string();
+    re.replace(line, repl).to_string()
 }
